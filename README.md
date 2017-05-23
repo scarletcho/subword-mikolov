@@ -4,6 +4,8 @@ Details that are not explicitly described are inferred based on the example inpu
 
 * Usage:
 
-		$ python subword.py <W-parameter> <S-parameter>
+		$ python subword.py <corpus-filename> <W-parameter> <S-parameter>
 		
+* Example (Mikolov, et al., 2012):
 		
+		INPUT:	new company dreamworks interactive		OUTPUT: new company dre+ am+ wo+ rks: in+ te+ ra+ cti+ ve:

@@ -5,7 +5,7 @@ subword.py
 This script converts infrequent words into subwords in a given corpus in English,
 following the method introduced in Mikolov, et al.(2012).
 
-Usage:  $ python subword.py <corpus-file-name> <W-parameter> <S-parameter>
+Usage:  $ python subword.py <corpus-filename> <W-parameter> <S-parameter>
 
 Yejin Cho (scarletcho@gmail.com)
 
