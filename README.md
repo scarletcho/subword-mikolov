@@ -8,4 +8,4 @@ Details that are not explicitly described are inferred based on the example inpu
 		
 * Example (Mikolov, et al., 2012):
 		
-		INPUT:	new company dreamworks interactive		OUTPUT: new company dre+ am+ wo+ rks: in+ te+ ra+ cti+ ve:
+		INPUT:	new company dreamworks interactive		OUTPUT:	new company dre+ am+ wo+ rks: in+ te+ ra+ cti+ ve:
