@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<title>mikolov-tech-report</title>
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb
+}
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+}
+</style>
+
+
+</head>
+
+<body>
+
+<!-- get style -->
+
+<p><link rel="stylesheet" type="text/css" href="style.css" /></p>
+
+<h1 id="toc_0"><font style="text-align:right;font-size:35px"> Replication of</font><br/> <b><i>Subword Language Modeling</b><br/> &nbsp; &nbsp; &nbsp; &nbsp; with Neural Networks</i> <font style="text-align:right;font-size:30px">(Mikolov, et al., 2012)</font></h1>
+
+<p><br/></p>
+
+<h4 id="toc_1"><div style="text-align: right; font-size:15px">Yejin Cho (scarletcho@korea.ac.kr; 2015021077 영어영문학과) <br/> Sunghah Hwang (hshsun@korea.ac.kr; 2013021209 영어영문학과) <br/> Hyungwon Yang (hyung8758@gmail.com; 2014021089 영어영문학과)</div></h4>
+
+<div>
+  <h2>Table of Contents</h2>
+
+  <ul id="markdown-toc">
+    <li>
+      <a href="#prerequisites">I. Prerequisites</a>
+    </li>
+      
+      <ul>
+        <li>
+          <a href="#srilm">SRILM > 1.7.1</a>
+        </li>
+
+        <li>
+          <a href="#liblbfgs">libLBFGS</a>
+            </li>
+ <li>
+          <a href="#nplm">NPLM</a>
+            </li>
+
+        <li>
+          <a href="#rnnlm">rnnlm-0.3e</a>
+        </li>
+        
+        <li>
+          <a href="#subword">subword-mikolov</a>
+        </li>
+
+        <li>
+          <a href="#ptb">Penn Treebank Corpus</a>
+        </li>
+
+        <li>
+          <a href="#text8">Text8 Corpus</a>
+        </li>
+        </ul>
+
+    <li>
+      <a href="#ptb-corpus-experiments">II. Penn Treebank Corpus Experiments (5.8M characters)</a>
+    </li>
+
+      <ul>
+        <li>
+          <a href="#word-level-models-ptb">Word-level-models</a>
+        </li>
+
+        <li>
+          <a href="#character-level-models-ptb">Character-level models</a>
+            </li>
+
+        <li>
+          <a href="#subword-level-models-ptb">Subword-level models</a>
+        </li>
+        </ul>
+
+    <li>
+      <a href="#text8-corpus-experiments">III. Text8 Corpus Experiments (100M characters)</a>
+    </li>
+
+        <ul>
+            <li>
+          <a href="#word-level-models-text8">Word-level-models</a>
+        </li>
+
+        <li>
+          <a href="#character-level-models-text8">Character-level models</a>
+        </li>
+
+
+        <li>
+          <a href="#subword-level-models-text8">Subword-level models</a>
+        </li>
+      </ul>
+
+        <li>
+          <a href="#exps-left">IV. Experiments left unreplicated</a>
+        </li>
+        
+            <li>
+            <a href="#references">References</a>
+            </li>
+      </ul>
+
+  </ul>
+</div>
+
+<p><br/>
+<br/></p>
+
+<h2 id="toc_2"><a name="prerequisites"></a> I. Prerequisites</h2>
+
+<h3 id="toc_3"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>SRILM</b></code> <a name="srilm"></a></h3>
+
+<ul>
+<li><strong>SRILM</strong> is a toolkit for building and applying statistical language models (LMs), primarily for use in speech recognition, statistical tagging and segmentation, and machine translation. It has been under development in the <em>SRI Speech Technology and Research Laboratory</em> since 1995.</li>
+<li>For more information, check out its <a href="http://www.speech.sri.com/projects/srilm/">official website</a>.</li>
+<li>Download <a href="http://www.speech.sri.com/projects/srilm/download.html">SRILM</a> (1.7.1 or newer) and unpack.</li>
+</ul>
+
+<div class="terminal-box">
+<command>tar -xvzf srilm-1.7.2.tar.gz</command>
+</div>
+
+<h2 id="toc_4"><br/></h2>
+
+<h3 id="toc_5"><a name="liblbfgs"></a><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>libLBFGS</b></code></h3>
+
+<ul>
+<li>To add the functionality to train and test <strong>maximum entropy (MaxEnt) language models</strong> to the SRILM toolkit, you need to install libLBFGS against the toolkit.  Download libLBFGS from <a href="https://github.com/chokkan/liblbfgs">here</a> and in the directory, run the following commands:</li>
+</ul>
+
+<div class="terminal-box">
+<comment>~/liblbfgs-1.10/</comment>
+<br/>
+<command>make clean</command>
+<br/>
+<command>./configure</command>
+<br/>
+<command>make</command>
+<br/>
+<command>make install</command>
+</div>
+
+<ul>
+<li>libLBFGS defaults to double precision (64 bit) for floating point values. This is highly recommended to achieve even better precision at the cost of longer training time with more RAM usage. However, in cases where the corpus to train is large or RAM is limited, you will have to use single precision instead of double. To do this, before configuring and compiling libLBFGS, open the file <code><span style="background-color:#DCDCDC;color:#DC143C">include/lbfgs.h</span></code> and change line 40:</li>
+</ul>
+
+<div class="terminal-box">
+#define LBFGS_FLOAT    64
+</div>
+
+<p style="padding-left:30px">to</p>
+
+<div class="terminal-box">
+#define LBFGS_FLOAT    32
+</div>
+
+<ul>
+<li>Change into the SRILM main directory and open Makefile in <code><span style="background-color:#DCDCDC;color:#DC143C">common</code></span> directory which corresponds to your machine type (e.g., <code><span style="background-color:#DCDCDC;color:#DC143C">common/Makefile.machine.i686-m64</code></span> if you use 64-bit Linux or macbook) and add the following flag:</li>
+</ul>
+
+<div class="terminal-box">
+HAVE_LIBLBFGS = 1
+</div>
+
+<ul>
+<li><p>Configure and compile SRILM. </p></li>
+<li><p>Note that when compiling under x86-64 system (also known as amd64), SRILM tends to produce 32-bit binaries by default, and cannot link with a 64-bit libLBFGS. To fix this, set the following in line 8 in the main SRILM Makefile:</p></li>
+</ul>
+
+<div class="terminal-box">
+MACHINE_TYPE := <code style="background-color:#000; color:#00FF00; border:none;padding:0; margin:0;">$</code>(shell <code style="background-color:#000; color:#00FF00; border:none;padding:0; margin:0;">$</code>(SRILM)/sbin/machine-type)
+</div>
+
+<p style="padding-left:30px">to</p>
+
+<div class="terminal-box">
+MACHINE_TYPE := i686-m64
+</div>
+
+<ul>
+<li>if you have installed libLBFGS under <code><span style="background-color:#DCDCDC;color:#DC143C">/usr/local</span></code>, SRILM should find the libLBFGS include and library files automatically. However, if you do not have root privileges, and you have installed libLBFGS under your home directory (e.g. by using <code>./configure --prefix=$HOME</code>), you might have to modify the SRILM Makefiles to let SRILM know where it can find libLBFGS. For example, if you are compiling under <code><span style="background-color:#DCDCDC;color:#DC143C">i686-m64</span></code>, open <code><span style="background-color:#DCDCDC;color:#DC143C">common/Makefile.machine.i686-m64</span></code> and change the lines 39~43:</li>
+</ul>
+
+<div class="terminal-box">
+<comment>Other useful include directories.</comment>
+<br/>
+ADDITIONAL_INCLUDES =
+<br/><br/>
+<comment>Other useful linking flags.</comment>
+<br/>
+ADDITIONAL_LDFLAGS =
+</div>
+
+<p style="padding-left:30px">to</p>
+
+<div class="terminal-box">
+<comment>Other useful include directories.</comment>
+<br/>
+ADDITIONAL_INCLUDES = -I$(HOME)/include
+<br/><br/>
+<comment>Other useful linking flags.</comment>
+<br/>
+ADDITIONAL_LDFLAGS = -L$(HOME)/lib
+</div>
+
+<h2 id="toc_6"><br/></h2>
+
+<h3 id="toc_7"><a name="nplm"></a><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>NPLM</b></code></h3>
+
+<ul>
+<li><p>1) <strong>Install NPLM Toolkit</strong> (by Ashish Vaswan et al)</p>
+
+<ul>
+<li><em>Neural Probabilistic Language Model (NPLM) Toolkit</em> is for training and using feedforward neural language models (Bengio, 2003).</li>
+<li>Download the latest version of <em>NPLM Toolkit</em> (<strong>nplm-0.3.tar.gz</strong>) <a href="https://nlg.isi.edu/software/nplm/nplm-0.3.tar.gz">here</a> and <em>boost c++ Libraries</em> (<strong>boost<em>1</em>64_0.tar.bz2</strong>) <a href="https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.bz2">here</a>, then unzip them.</li>
+<li>Run the following commands:</li>
+</ul>
+
+<div class="terminal-box">
+<comment>Install boost </comment><br/>
+<comment>./boost_1_64_0/</comment>
+<br/>
+<command>./bootstrap.sh</command>
+<br/>
+<command>./b2 install</command><br/><br/>
+<comment>Compile NPLM </comment><br/>
+<comment>./NEURAL_LANGAUGE_MODEL/src </comment><br/>
+<command>make install</command>
+</div>
+
+<ul>
+<li>Before compiling NPLM, edit the Makefile to reflect the locations of the Boost and compiler. </li>
+</ul></li>
+<li><p>2) <strong>Run Example code</strong></p>
+
+<ul>
+<li>Navigate to an example directory and run a Makefile, then prerequisites for training and testing will be automatically generated. After generating the files such as train.ngram, Makefile will train the data to generate models and then it will test the models.</li>
+</ul>
+
+<div class="terminal-box">
+<comment>./NEURAL_LANGUAGE_MODEL/example/</comment>
+<br/>
+<command>make</command>
+<br/>
+</div>
+
+<ul>
+<li>In order to train a new corpus, run &#39;prepareNeuralLM&#39;, &#39;trainNeuralNetwork&#39;, and &#39;testNeuralNetwork&#39; codes respectively in ./NEURAL_LANGUAGE_MODEL/src/ directory.</li>
+</ul></li>
+</ul>
+
+<h2 id="toc_8"><br/></h2>
+
+<h3 id="toc_9"><a name="rnnlm"></a><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>rnnlm-0.3e</b></code></h3>
+
+<ul>
+<li><p>1) <strong>RNNLM Toolkit</strong> (by T. Mikolov)</p>
+
+<ul>
+<li><em>RNNLM Toolkit</em> is an open source and freely available toolkit for training statistical language models based or recurrent neural networks.</li>
+<li>Download latest version of <em>RNNLM Toolkit</em> (<strong>rnnlm-0.3e</strong>) along with <strong>Basic examples</strong> <a href="http://www.fit.vutbr.cz/%7Eimikolov/rnnlm/">here</a>, and run the following commands:</li>
+</ul>
+
+<div class="terminal-box">
+<comment>~/rnnlm-0.3e/</comment>
+<br/>
+<command>make clean</command>
+<br/>
+<command>make</command>
+</div>
+
+<ul>
+<li>To check whether rnnlm-0.3e and all its dependencies including SRILM are installed without problem, run <strong>rnnlm-0.3e/example.sh</strong>.</li>
+<li>Detailed guide on options available can be found in <strong>rnnlm-0.3e/FAQ.txt</strong> and </li>
+</ul></li>
+<li><p>2) <strong>Basic examples</strong></p>
+
+<ul>
+<li>This includes a set of useful sample scripts for running experiments on nine different settings using rnnlm-0.2b.</li>
+<li>Simply replace <strong>rnnlm-0.2b</strong> with its newer version, <strong>rnnlm-0.3e</strong>:</li>
+</ul>
+
+<div class="terminal-box">
+<comment>~/simple-examples/</comment>
+<br/>
+<command>rm -rf rnnlm-0.2b</command>
+<br/>
+<command>mv rnnlm-0.3e .</command>
+</div>
+
+<ul>
+<li>Note that <strong>Penn Treebank</strong> corpus in <em>simple-examples/data/</em> is already pre-processed and split into subsets (train / validation / test set) for you.</li>
+</ul></li>
+</ul>
+
+<h2 id="toc_10"><br/></h2>
+
+<h3 id="toc_11"><a name="subword"></a><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>subword-mikolov</b></code></h3>
+
+<ul>
+<li><strong><em>subword-mikolov</em></strong> is our own implementation of English subword segmentation proposed in Mikolov, et al (2012). You can download the code <a href="https://github.com/scarletcho/subword-mikolov">here</a>.</li>
+<li><p>Usage of <em>subword-mikolov</em>/<strong>subword.py</strong>:
+<div class="terminal-box">
+<comment>~/subword-mikolov/</comment>
+<br/>
+<command>python subword.py <corpus-filename> <W-parameter> <S-parameter> </command>
+</div> </p></li>
+<li><p>To apply on text8 with suggested parameters (W=1000, S=2000) in Mikolov, et al (2012):
+<div class="terminal-box">
+<comment>~/subword-mikolov/</comment>
+<br/>
+<command>python subword.py text8.char.txt 1000 2000 </command>
+</div> </p></li>
+<li><p>Example (Mikolov, et al., 2012):
+<div class="output-box">
+<output>
+ INPUT: new company dreamworks interactive
+</output><br/>
+<output>
+OUTPUT: new company dre+ am+ wo+ rks: in+ te+ ra+ cti+ ve: 
+</output>
+</div></p></li>
+</ul>
+
+<h2 id="toc_12"><br/></h2>
+
+<h3 id="toc_13"><a name="ptb"></a><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>Penn Treebank Corpus</b></code></h3>
+
+<ul>
+<li><p>The Penn Treebank (PTB) project selected 2,499 stories from a three year Wall Street Journal (WSJ) collection of 98,732 stories for syntactic annotation. These 2,499 stories have been distributed in both Treebank-2 (LDC1999T42) and Treebank-3 (LDC1999T42) releases of PTB. Treebank-2 includes the raw text for each story. Three &quot;map&quot; files are available in a compressed file (pennTB_tipster_wsj_map.tar.gz) as an additional download for users who have licensed Treebank-2 and provide the relation between the 2,499 PTB filenames and the corresponding WSJ DOCNO strings in TIPSTER.</p></li>
+<li><p>Available at purchase at Linguistics Data Consortium (LDC): <a href="https://catalog.ldc.upenn.edu/ldc99t42">hyperlink</a></p></li>
+<li><p>However, <strong>Penn Treebank</strong> corpus in <em>simple-examples/data/</em> which is a part of Mikolov&#39;s RNNLM Toolkit is already pre-processed and split into subsets (train / validation / test set) for you.</p>
+
+<ul>
+<li> <a href="http://www.fit.vutbr.cz/%7Eimikolov/rnnlm/simple-examples.tgz">Quick download link</a></li>
+</ul></li>
+</ul>
+
+<h2 id="toc_14"><br/></h2>
+
+<h3 id="toc_15"><a name="text8"></a><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>Text8 Corpus</b></code></h3>
+
+<ul>
+<li><p>The test data for the Large Text Compression Benchmark is the first 109 bytes of the English Wikipedia dump on Mar. 3, 2006. http://download.wikipedia.org/enwiki/20060303/enwiki-20060303-pages-articles.xml.bz2 (1.1 GB or 4.8 GB after decompressing with bzip2 - link no longer works). Results are also given for the first 108 bytes, which is also used for the Hutter Prize. These files have the following sizes and checksums:</p></li>
+<li><p>Available at Matt Mahoney&#39;s website: <a href="http://mattmahoney.net/dc/textdata">hyperlink</a></p>
+
+<ul>
+<li><a href="http://mattmahoney.net/dc/text8.zip">Quick download link</a></li>
+</ul></li>
+</ul>
+
+<p><br/></p>
+
+<p><br/></p>
+
+<h2 id="toc_16"><a name="ptb-corpus-experiments"></a>II. Penn Treebank <font style="font-size:20px">(PTB)</font> Corpus Experiments <font style="font-size:20px">(5.8M characters)</font></h2>
+
+<h3 id="toc_17"><a name="word-level-models-ptb"></a>Word-level Models</h3>
+
+<h3 id="toc_18"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>PTB - word N-gram</b></code></h3>
+
+<ul>
+<li>5 gram with modified Kneser-Ney smoothing (no count cutoffs): <font style="color:red"><b>1.34 BPC</b></font> (1.32 in paper)
+
+<ul>
+<li>N-gram: 5</li>
+<li>Smoothing algorithm: Modified Kneser-Ney</li>
+</ul></li>
+</ul>
+
+<div class="terminal-box">
+<comment>
+train
+</comment><br/>
+<command>
+ngram-count -order 5 -text ptb.train.txt -kndiscount -lm 5gram_kn.lm -debug 2
+</command><br/>
+<br/><comment>
+test
+</comment><br/>
+<command>
+ngram -lm 5gram_kn.lm -ppl ptb.test.txt -debug 2
+</command>
+</div>
+
+<p><br/></p>
+
+<div class="output-box">
+<output>
+file ../data/ptb.test.txt: 3761 sentences, 78669 words, 4794 OOVs  
+</output><br/>
+<output>
+0 zeroprobs, logprob= -179065.1 ppl= 202.5212 ppl1= 265.3955
+</output><br/>
+<p style="font-size:10px; text-align:center; margin:5px 0px 0px">
+NumChars = 449945 <small>(including whitespaces)</small><br/>
+NumChars = 367515 <small>(excluding whitespaces)</small><br/>
+AvgCharPerWord = 449945 / 78669 = 5.719470185206371</p>  
+</div>
+
+<p><br/></p>
+
+<p align="center">
+<strong>BPC</strong> = log<sub>2</sub>( PPL ) / AvgCharPerWord ≈ <font style="color:red"><b>1.34</b></font>
+<br/>  
+<font size="-3">log<sub>2</sub>(202.5212) / (449945/78669) = 1.339622181681668</font>
+</p>
+
+<h2 id="toc_19"><br/></h2>
+
+<h3 id="toc_20"><a name="character-level-models-ptb"></a>Character-level Models</h3>
+
+<h3 id="toc_21"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>PTB - character N-gram</b></code></h3>
+
+<ul>
+<li>8-gram LM with Ristad&#39;s discounting and count cutoffs: <font style="color:red"><b>1.48 BPC</b></font> (1.48 in paper)
+
+<ul>
+<li>N-gram: 8</li>
+<li>Smoothing algorithm: Ristad&#39;s disconting</li>
+<li>Count cut-offs:
+
+<ul>
+<li>3-gram: 1 (gt3min)</li>
+<li>4-gram: 1 (gt4min)</li>
+<li>5-gram: 1 (gt5min)</li>
+<li>6-gram: 2 (gt6min)</li>
+<li>7-gram: 3 (gt7min)</li>
+<li>8-gram: 6 (gt8min)</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<div class="terminal-box">
+<comment>
+train
+</comment><br/>
+<command>
+ngram-count -text ptb.char.train.txt -order 8 -lm 8gram_ristad.lm -ndiscount -gt3min 1 -gt4min 1 -gt5min 1 -gt6min 2 -gt7min 3 -gt8min 6 -debug 2
+</command><br/>
+<br/><comment>
+test
+</comment><br/>
+<command>
+ngram -lm 8gram_ristad.lm -order 8 -ppl ptb.char.test.txt -debug 2
+</command>
+</div>
+
+<p><br/></p>
+
+<div class="output-box">
+<output>
+file ptb.char.test.txt: 3761 sentences, 438662 words, 0 OOVs  
+</output><br/>
+<output>
+0 zeroprobs, logprob= -196799.1 ppl= 2.784974 ppl1= 2.809538
+</output><br/>
+</div>
+
+<p><br/></p>
+
+<p align="center">
+<strong>BPC</strong> = log<sub>2</sub>( PPL ) ≈ <font style="color:red"><b>1.48</b></font>  
+<br/>
+<font size="-3">log<sub>2</sub>(2.784974) = 1.4776638588952331 </font>
+</p>
+
+<h2 id="toc_22"><br/></h2>
+
+<h3 id="toc_23"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>PTB - character MaxEnt</b></code></h3>
+
+<ul>
+<li>Hash-based maximum entropy model with 15 n-gram features: <font style="color:red"><b>1.35 BPC</b></font> (1.37 in paper)
+
+<ul>
+<li>N-gram: 15</li>
+<li>No start-of-sentence (sos)</li>
+<li>No end-of-sentence (eos)</li>
+</ul></li>
+</ul>
+
+<div class="terminal-box">
+<comment>
+train
+</comment><br/>
+<command>
+ngram-count -order 15 -text ptb.char.train.txt -maxent -lm 15maxent_no-sos-eos.gz -no-eos -no-sos -debug 3
+</command><br/>
+<comment>
+test
+</comment><br/>
+<br/><command>
+ngram -maxent -lm 15maxent_no-sos-eos.gz -ppl ptb.char.test.txt -no-eos -no-sos
+</command>
+</div>
+
+<p><br/></p>
+
+<div class="output-box">
+<output>
+file ptb.char.test.txt: 0 sentences, 438662 words, 0 OOVs  
+</output><br/>
+<output>
+0 zeroprobs, logprob= -178769.1 ppl= 2.555834 ppl1= 2.555834  
+</output><br/>
+</div>
+
+<p><br/></p>
+
+<p align="center">
+<strong>BPC</strong> = log<sub>2</sub>( PPL ) ≈ <font style="color:red"><b>1.35</b></font>  
+<br/>
+<font size="-3">log<sub>2</sub>(2.555834) = 1.3537941370854139 </font>
+</p>
+
+<h2 id="toc_24"><br/></h2>
+
+<h3 id="toc_25"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>PTB - character NNLM</b></code></h3>
+
+<ul>
+<li>NNLM: <font style="color:red"><b>4.78 BPC</b></font> (1.57 in paper)<br>
+
+<ul>
+<li>N-gram: 30</li>
+<li>Hidden units: 1000</li>
+<li>Learning rate: 1</li>
+<li>Number of epochs: 15</li>
+<li>Minibatch size: 100</li>
+</ul></li>
+</ul>
+
+<div class="terminal-box">
+<comment>
+prepare training data
+</comment><br/>
+<command>
+prepareNeuralLM --train_text char_ptb3_train --ngram_size 30 --vocab_size 50 --write_words_file train_words --train_file train.ngrams --validation_file char_ptb3_train_valid
+</command><br/>
+<comment>
+train
+</comment><br/>
+<command>
+trainNeuralNetwork --train_file train.ngrams --validation_file valid.ngrams --num_epochs 15 --words_file train_words --num_hidden 1000 --model_prefix model --learning_rate 1 --minibatch_size 100
+</command><br/>
+<comment>
+test
+</comment><br/>
+<command>
+testNeuralNetwork --test_file test.ngrams --model_file model.1
+</command>
+</div>
+
+<p><br/></p>
+
+<div class="output-box">
+<output>
+Testing the trained model.
+</output><br/>
+<output>
+(required)  Model file. Value: ./model.1
+</output><br/>
+<output>
+(required)  Test file (one numberized example per line). Value: test.ngrams
+</output><br/>
+<output>
+Number of test instances: 442424
+</output><br/>
+<output>
+Test log-likelihood: -1466220
+</output><br/>
+<output>
+Perplexity: 27.496555
+</output><br/>
+</div>
+
+<p><br/></p>
+
+<p align="center">
+<strong>BPC</strong> = log<sub>2</sub>( PPL ) ≈ <font style="color:red"><b>4.78</b></font>  
+<br/>
+<font size="-3">log<sub>2</sub>(27.496555) = 4.781178965996908 </font>
+</p>
+
+<p><br/></p>
+
+<h2 id="toc_26"><br/></h2>
+
+<h3 id="toc_27"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>PTB - character BPTT-RNN</b></code></h3>
+
+<ul>
+<li>BPTT-RNN LM: <font style="color:red"><b>1.42 BPC</b></font> (1.42 in paper)
+
+<ul>
+<li>Hidden units: 1000</li>
+<li>BPTT steps: 10</li>
+<li>BPTT blocks: 20</li>
+</ul></li>
+</ul>
+
+<div class="terminal-box">
+<comment>
+train
+</comment><br/>
+<command>
+rnnlm-0.3e/rnnlm -train ptb.char.train.txt -valid ptb.char.valid.txt -rnnlm ptb.char.model.hidden1000.txt -hidden 1000 -rand-seed 1 -debug 2 -class 1 -bptt 10 -bptt-block 20
+</command><br/>
+<br/><comment>
+test
+</comment><br/>
+<command>
+rnnlm-0.3e/rnnlm -rnnlm ptb.char.model.hidden1000.txt -test ptb.char.test.txt
+</command>
+</div>
+
+<p><br/></p>
+
+<div class="output-box">
+<output>
+test file: ../data/ptb.char.test.txt
+</output><br/>
+<output>
+rnnlm file: ../models/ptb.char.model.hidden1000.txt
+</output><br/>
+<output>
+test log probability: -189364.304607
+</output><br/>
+<output>
+PPL net: 2.679270
+</output><br/>
+</div>
+
+<p><br/></p>
+
+<p align="center">
+<strong>BPC</strong> = log<sub>2</sub>( PPL ) ≈ <font style="color:red"><b>1.42</b></font>  
+<br/>
+<font size="-3">log<sub>2</sub>(2.679270) = 1.4218399742498347 </font>
+</p>
+
+<p><br/></p>
+
+<p><br/></p>
+
+<h2 id="toc_28"><a name="text8-corpus-experiments"></a>III. Text8 Corpus Experiments <font style="font-size:20px">(100M characters)</font></h2>
+
+<h3 id="toc_29"><a name="word-level-models-text8"></a>Word-level Models</h3>
+
+<h3 id="toc_30"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>text8 - word N-gram</b></code></h3>
+
+<ul>
+<li>5 gram with unmodified Kneser-Ney smoothing: <font style="color:red"><b>1.42 BPC</b></font> (1.43 in paper)
+
+<ul>
+<li>N-gram: 5</li>
+<li>Smoothing algorithm: Unmodified Kneser-Ney</li>
+</ul></li>
+</ul>
+
+<div class="terminal-box">
+<comment>
+train
+</comment><br/>
+<command>
+ngram-count -text text8_word_train -order 5 -lm model/5gram_ukn.lm -ukndiscount -debug 2
+</command><br/>
+<br/><comment>
+test
+</comment><br/>
+<command>
+ngram -lm model/5gram_ukn.lm -order 5 -ppl text8_word_test -debug 2
+</command>
+</div>
+
+<p><br/></p>
+
+<div class="output-box">
+<output>
+file text8_word_test: 37611 sentences, 853696 words, 10327 OOVs  
+</output><br/>
+<output>
+0 zeroprobs, logprob= -2201979 ppl= 315.8389 ppl1= 408.2555    
+</output><br/>
+<p style="font-size:10px; text-align:center; margin:5px 0px 0px">
+NumChars = 4998606 <small>(including whitespaces)</small><br/>
+NumChars = 4144768 <small>(excluding whitespaces)</small><br/>
+AvgCharPerWord = 4998606/853696 = 5.855252923757403
+</p>
+</div>
+
+<p><br/></p>
+
+<p align="center">
+<strong>BPC</strong> = log<sub>2</sub>( PPL ) / AvgCharPerWord ≈ <font style="color:red"><b>1.42</b></font>
+<br/>  
+<font size="-3">log<sub>2</sub>(315.8389) / (4998606/853696) = 1.4180506236374402</font>
+</p>
+
+<h2 id="toc_31"><br/></h2>
+
+<h3 id="toc_32"><a name="character-level-models-text8"></a>Character-level Models</h3>
+
+<h3 id="toc_33"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>text8 - character N-gram</b></code></h3>
+
+<ul>
+<li><p>8 gram with Ristad&#39;s discounting: <font style="color:red"><b>1.70 BPC</b></font> (1.64 in paper)</p>
+
+<ul>
+<li>N-gram: 8</li>
+<li>Smoothing algorithm: Ristad&#39;s disconting</li>
+<li>Count cut-offs:
+
+<ul>
+<li>3-gram: 1 (gt3min)</li>
+<li>4-gram: 1 (gt4min)</li>
+<li>5-gram: 1 (gt5min)</li>
+<li>6-gram: 2 (gt6min)</li>
+<li>7-gram: 3 (gt7min)</li>
+<li>8-gram: 6 (gt8min)</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<div class="terminal-box">
+<comment>
+train
+</comment><br/>
+<command>
+ngram-count -text text8_char_train -order 8 -lm model/8gram_ristad.lm -ndiscount8 -gt3min 1 -gt4min 1 -gt5min 1 -gt6min 2 -gt7min 3 -gt8min 6 -debug 2
+</command><br/>
+<br/><comment>
+test
+</comment><br/>
+<command>
+ngram -lm model/8gram_ristad.lm -order 8 -ppl text8_char_test -debug 2
+</command>
+</div>
+
+<p><br/></p>
+
+<div class="output-box">
+<output>
+file text8_char_test: 37611 sentences, 4960990 words, 0 OOVs  
+</output><br/>
+<output>
+0 zeroprobs, logprob= -2563273 ppl= 3.256852 ppl1= 3.286138  
+</output>
+</div>
+
+<p><br/></p>
+
+<p align="center">
+<strong>BPC</strong> = log<sub>2</sub>( PPL ) ≈ <font style="color:red"><b>1.70</b></font>  
+<br/>
+<font size="-3">log<sub>2</sub>(3.256852) = 1.7034781613311727</font>
+</p>
+
+<h2 id="toc_34"><br/></h2>
+
+<h3 id="toc_35"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>text8 - character MaxEnt</b></code></h3>
+
+<ul>
+<li>20 gram Maximum Entropy: <font style="color:red"><b>1.57 BPC</b></font> (1.55 in paper)
+
+<ul>
+<li>N-gram: 20</li>
+</ul></li>
+</ul>
+
+<div class="terminal-box">
+<comment>
+train
+</comment><br/>
+<command>
+ngram-count -text text8_char_train -maxent -lm model/20maxent.lm -order 20 -debug 2
+</command><br/>
+<br/><comment>
+test
+</comment><br/>
+<command>
+ngram -maxent -lm model/20maxent.lm -order 20 -ppl text8_char_test -debug 2
+</command>
+</div>
+
+<p><br/></p>
+
+<div class="output-box">
+<output>
+file text8_char_test: 37611 sentences, 4960990 words, 0 OOVs  
+</output><br/>
+<output>
+0 zeroprobs, logprob= -2354973 ppl= 2.958873 ppl1= 2.983308   
+</output><br/>
+<p style="font-size:12px; text-align:right; margin:0;">
+<i>Note: LM size around 21G</i>
+</p>
+</div>
+
+<p><br/></p>
+
+<p align="center">
+BPC = log<sub>2</sub>( PPL ) ≈ <font style="color:red"><b>1.57</b></font>  
+<br/>
+<font size="-3">log<sub>2</sub>(2.958873) = 1.5650477748683513</font>  
+</p>
+
+<h2 id="toc_36"><br/></h2>
+
+<h3 id="toc_37"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>text8 - character RNNME</b></code></h3>
+
+<ul>
+<li><p>A Small RNN jointly trained with Maximum Entropy (RNNME): <font style="color:red"><b>1.97 BPC</b></font> (1.55 in paper)</p>
+
+<ul>
+<li>Hidden units: 160</li>
+<li>Interpolation weight (alpha): 0.1</li>
+<li>Hash size (direct): 100 * 10^6</li>
+<li>N-gram: 10</li>
+</ul></li>
+</ul>
+
+<div class="terminal-box">
+<comment>
+train
+</comment><br/>
+<command>
+rnnlm-0.3e/rnnlm -train text8_char_train -valid text8_char_valid -hidden 160 -rnnlm rnnme.char10gram160h.mdl -maxent-alpha 0.1 -direct 100 -direct-order 10 -debug 2 > rnnme.char10gram160h.log
+</command><br/>
+<br/><comment>
+test
+</comment><br/>
+<command>
+rnnlm-0.3e/rnnlm -rnnlm rnnme.char10gram160h.mdl -test text8_char_test
+</command>
+</div>
+
+<p><br/></p>
+
+<div class="output-box">
+<output>
+test file: text8_char_test
+</output><br/>
+<output>
+rnnlm file: rnnme.10g.char160h.mdl
+</output><br/>
+<output>
+test log probability: -2969026.807369
+</output><br/>
+<output>
+PPL net: 3.926187
+</output><br/>
+<p style="font-size:12px; text-align:right; margin:0;">
+<i>Note: LM size around 500M</i>
+</p>
+</div>
+
+<p><br/></p>
+
+<p align="center">
+BPC = log<sub>2</sub>( PPL ) ≈ <font style="color:red"><b>1.97</b></font>  
+<br/>
+<font size="-3">log<sub>2</sub>(3.926187) = 1.9731288884301121</font>  
+</p>
+
+<h2 id="toc_38"><br/></h2>
+
+<h3 id="toc_39"><a name="subword-level-models-text8"></a>Subword-level Models</h3>
+
+<h3 id="toc_40"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>text8 - subword N-gram</b></code></h3>
+
+<ul>
+<li><p>8 gram with Witten-Bell discounting: <font style="color:red"><b>5.0 BPF</b></font>, <font style="color:red"><b>1.59 BPC</b></font> (4.71 BPF, 1.58 BPC in paper)</p>
+
+<ul>
+<li>N-gram: 8</li>
+<li>Smoothing algorithm: Witten-Bell discounting</li>
+</ul></li>
+</ul>
+
+<div class="terminal-box">
+<comment>
+train
+</comment><br/>
+<command>
+ngram-count -text text8_subword_train -order 8 -lm model/8gram_wb.lm -wbdiscount -debug 2
+</command><br/>
+<br/><comment>
+test
+</comment><br/>
+<command>
+ngram -maxent -lm model/8gram_wb.lm -order 8 -ppl text8_subword_test -debug 2
+</command>
+</div>
+
+<p><br/></p>
+
+<div class="output-box">
+<output>
+file text8_subword_test: 37611 sentences, 1571172 words, 0 OOVs  
+</output><br/>
+<output>
+0 zeroprobs, logprob= -2427524 ppl= 32.27893 ppl1= 35.07842  
+</output><br/>
+<p style="font-size:10px; text-align:center; margin:5px 0px 0px">
+NumFrag = 1571172<br/>
+NumChar = 4957157 <small>(excluding boundary markers, '+' and ':')</small>
+</p>
+</div>
+
+<p><br/></p>
+
+<p align="center">
+<strong>BPF</strong> = log<sub>2</sub>( PPL ) = <font style="color:red"><b>5.0</b></font>
+<br/>
+<font size="-3">log<sub>2</sub>(32.27893) = 5.0125208510346884</font>  
+<br/>
+<strong>BPC</strong> = log<sub>2</sub>( PPL ) / AvgCharPerFrag = <font style="color:red"><b>1.59</b></font>  
+<br/>
+<font size="-3">log<sub>2</sub>(32.27893) / (4957157 / 1571172) = 1.5887195847462312</font>
+</p>
+
+<h2 id="toc_41"><br/></h2>
+
+<h3 id="toc_42"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>text8 - subword MaxEnt</b></code></h3>
+
+<ul>
+<li><p>8-gram Maximum Entropy LM: <font style="color:red"><b>4.78 BPF</b></font>, <font style="color:red"><b>1.51 BPC</b></font> (4.61 BPF, 1.55 BPC in paper)</p>
+
+<ul>
+<li>N-gram: 8</li>
+</ul></li>
+</ul>
+
+<div class="terminal-box">
+<comment>
+train
+</comment><br/>
+<command>
+ngram-count -text text8_subword_train -maxent -order 8 -lm model/8maxent.lm -debug 2
+</command><br/>
+<br/>
+<comment>
+test
+</comment><br/>
+<command>
+ngram -maxent -lm model/8maxent.lm -ppl text8_subword_test -debug 2
+</command>
+</div>
+
+<p><br/></p>
+
+<div class="output-box">
+<output>
+file text8_subword_test: 37611 sentences, 1571172 words, 0 OOVs  
+</output><br/>
+<output>
+0 zeroprobs, logprob= -2314705 ppl= 27.46581 ppl1= 29.73271 
+</output><br/>
+<p style="font-size:10px; text-align:center; margin:5px 0px 0px">
+NumFrag = 1571172<br/>
+NumChar = 4957157<small>(excluding boundary markers, '+' and ':')</small>
+</p>
+<p style="font-size:12px; text-align:right; margin:0;">
+<i>Note: LM size around 3.4G</i>
+</p>
+</div>
+
+<p><br/></p>
+
+<p align="center">
+<strong>BPF</strong> = log<sub>2</sub>( PPL ) = <font style="color:red"><b>4.78</b></font>
+<br/>
+<font size="-3">log<sub>2</sub>(27.46581) = 4.7795649341951245</font>  
+<br/>
+<strong>BPC</strong> = log<sub>2</sub>( PPL ) / AvgCharPerFrag = <font style="color:red"><b>1.51</b></font>
+<br/>
+<font size="-3">log<sub>2</sub>(27.46581) / (4957157 / 1571172)  = 1.5148841557346724</font>
+</p>    
+
+<h2 id="toc_43"><br/></h2>
+
+<h3 id="toc_44"><code style="background-color:#DCDCDC;color:#0047ab;border:none;"><b>text8 - subword RNNME</b></code></h3>
+
+<ul>
+<li><p>A Small RNN jointly trained with Maximum Entropy (RNNME): <font style="color:red"><b>1.66 BPC</b></font> (1.55 in paper)</p>
+
+<ul>
+<li>Hidden units: 160</li>
+<li>Interpolation weight (alpha): 0.1</li>
+<li>Hash size (direct): 100 * 10^6</li>
+<li>N-gram: 6</li>
+</ul></li>
+</ul>
+
+<div class="terminal-box">
+<comment>
+train
+</comment><br/>
+<command>
+rnnlm-0.3e/rnnlm -train text8_subword_train -valid text8_subword_valid -hidden 160 -rnnlm rnnme.subword.6g.160h.mdl -maxent-alpha 0.1 -direct 100 -direct-order 6 -debug 2 > rnnme.subword.6g.160h.log
+</command><br/>
+<br/><comment>
+test
+</comment><br/>
+<command>
+rnnlm-0.3e/rnnlm -rnnlm rnnme.subword.6g.160h.mdl -test text8_subword_test
+</command>
+</div>
+
+<p><br/></p>
+
+<div class="output-box">
+<output>
+test file: text8_subword_test
+</output><br/>
+<output>
+rnnlm file: rnnme.subword.6g.160h.mdl
+</output><br/>
+<output>
+test log probability: -2543195.127540
+</output><br/>
+<output>
+PPL net: 38.090295
+</output><br/>
+<p style="font-size:12px; text-align:right; margin:0;">
+<i>Note: LM size around 500M</i>
+</p>
+</div>
+
+<p><br/></p>
+
+<p align="center">
+<strong>BPF</strong> = log<sub>2</sub>( PPL ) = <font style="color:red"><b>5.25</b></font>
+<br/>
+<font size="-3">log<sub>2</sub>(38.090295) = 5.2513515561514135</font>  
+<br/>
+<strong>BPC</strong> = log<sub>2</sub>( PPL ) / AvgCharPerFrag = <font style="color:red"><b>1.66</b></font>
+<br/>
+<font size="-3">log<sub>2</sub>(38.090295) / (4957157 / 1571172)  = 1.6644170291926457</font>
+</p> 
+
+<p><br/></p>
+
+<p><br/></p>
+
+<h2 id="toc_45"><a name="exps-left"></a> IV. Experiments left unreplicated</h2>
+
+<ul>
+<li><p>There were some difficulties in replicating two tasks in the paper, which include:</p>
+
+<ul>
+<li><strong>Hessian-free Multiplicative-RNN</strong> (HF-MRNN) Language Modeling on text8
+
+<ul>
+<li><em>Main difficulties</em>
+
+<ul>
+<li>Excessive requirement of computing resources and training time.</li>
+<li>Sutskever, et al. (2011) notes that &quot;using a highly parallel system (consisting of 8 high-end GPUs with 4GB of RAM each)&quot;, training lasted roughly 5 days for each dataset.</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p></br></p>
+
+<ul>
+<li><strong>Automatic Speech Recognition (ASR)</strong> experiments
+
+<ul>
+<li>Re-scoring experiments on <U>RT04 Broadcast News</U> (evaluation set)</li>
+<li>Re-scoring experiments on <U>NIST RT05 Meeting recognition setup</U> with subword-level RNN models</li>
+<li><em>Main difficulties</em>
+
+<ul>
+<li>Unable to access data
+
+<ul>
+<li>RT04 Broadcast News (evaluation set):
+<p>- Could not be found online, including LDC.</p></li>
+<li>NIST RT05 Meeting recognition:
+<p>- Unable to download via LDC since order exceeds standard membership corpus quota. (cf. <a href="https://catalog.ldc.upenn.edu/LDC2011S06">hyperlink</a> to LDC.)</p></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p><br/></p>
+
+<p><br/></p>
+
+<h2 id="toc_46"><a name="references"></a> References</h2>
+
+<ul>
+<li>Bengio, Y., Ducharme, R., Vincent, P., &amp; Jauvin, C. (2003). A neural probabilistic language model. Journal of machine learning research, 3(Feb), 1137-1155.<br></li>
+<li>Martens, J., &amp; Sutskever, I. (2012). Training deep and recurrent networks with hessian-free optimization. In Neural networks: Tricks of the trade (pp. 479-535). Springer Berlin Heidelberg.</li>
+<li>Mikolov, T., Kombrink, S., Deoras, A., Burget, L., &amp; Cernocky, J. (2011). Rnnlm-recurrent neural network language modeling toolkit. In Proc. of the 2011 ASRU Workshop (pp. 196-201).</li>
+<li>Mikolov, T. (2012a). Statistical language models based on neural networks. Presentation at Google, Mountain View, 2nd April.<br></li>
+<li>Mikolov, T., Sutskever, I., Deoras, A., Le, H. S., Kombrink, S., &amp; Cernocky, J. (2012b). Subword language modeling with neural networks. preprint (http://www.fit.vutbr.cz/imikolov/rnnlm/char.pdf).<br></li>
+<li>Mikolov, T. (2012c). Statistical language models based on neural networks (Doctoral dissertation, PhD thesis, Brno University of Technology).<br></li>
+<li>Mikolov, T., Chen, K., Corrado, G., &amp; Dean, J. (2013). Efficient estimation of word representations in vector space. arXiv preprint arXiv:1301.3781.<br></li>
+<li>Stolcke, A. (2002). SRILM-an extensible language modeling toolkit. In Interspeech (Vol. 2002, p. 2002).<br></li>
+</ul>
+
+<p><br/>
+<br/></p>
+
+
+
+
+</body>
+
+</html>
