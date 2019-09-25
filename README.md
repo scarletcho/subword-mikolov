@@ -13,4 +13,4 @@ Details that are not explicitly described in the paper are inferred based on the
 
 * Reference:
 
-	Mikolov, T., Sutskever, I., Deoras, A., Le, H. S., Kombrink, S., & Cernocky, J. (2012b). *Subword language modeling with neural networks.* preprint. [[pdf](http://www.fit.vutbr.cz/imikolov/rnnlm/char.pdf)]
+	Mikolov, T., Sutskever, I., Deoras, A., Le, H. S., Kombrink, S., & Cernocky, J. (2012b). *Subword language modeling with neural networks.* preprint. [[pdf](http://www.fit.vutbr.cz/~imikolov/rnnlm/char.pdf)]
